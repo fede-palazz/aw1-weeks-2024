@@ -1,39 +1,37 @@
-"use strict";
+import dayjs from "dayjs";
 
-function Answer(response, name, score, date, id) {
-  this.response = response;
-  this.name = name;
+function Answer(text, username, score = 0, date, id) {
+  this.response = text;
+  this.username = username;
   this.score = score;
-  this.date = date;
+  this.date = dayjs(date);
   this.id = id;
+  this.toString = () =>
+    `${this.username} replied ${this.response} on ${this.date.format(
+      "YYYY-MM-DD"
+    )} and got a score of ${this.score}`;
 }
 
-function Question(text, name, date, answers, id) {
+function Question(text, name, date, answers = [], id) {
   this.text = text;
   this.name = name;
-  this.date = date;
+  this.date = dayjs(date);
   this.answers = answers;
   this.id = id;
   // pass a fully-constructed Answer object
-  this.add = function (answer) {
+  this.add = (answer) => {
     this.answers.push(answer);
   };
   // returns all the Answers of a given person
-  this.find = function (id) {
-    return this.answers.filter((answer) => answer.id === id);
-  };
+  this.find = (id) => this.answers.filter((answer) => answer.id === id);
   // returns an array of Answers after the given date
-  this.afterDate = function (date) {
-    return this.answers.filter((answer) => answer.date > date);
-  };
+  this.afterDate = (date) =>
+    this.answers.filter((answer) => answer.isAfter(dayjs(date)));
   // returns an array of Answers, sorted by increasing date
-  this.listByDate = function () {
-    return [...this.answers].sort((a, b) => (a.date < b.date ? -1 : 1));
-  };
+  this.listByDate = () =>
+    [...this.answers].sort((a, b) => (a.date.isAfter(b.date) ? 1 : -1));
   // returns an array of Answers, sorted by decreasing score
-  this.listByScore = function () {
-    return [...this.answers].sort((a, b) => (a.score > b.score ? -1 : 1));
-  };
+  this.listByScore = () => [...this.answers].sort((a, b) => b.score - a.score);
 }
 
 // Sample Answers
