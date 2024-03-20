@@ -27,6 +27,7 @@ The information should be stored in a SQlite database (`questions.sqlite`), desi
 
 ### `question` table
 
+
 | Field    | Type    |
 | -------- | ------- |
 | id       | integer |
@@ -46,6 +47,7 @@ The information should be stored in a SQlite database (`questions.sqlite`), desi
 | questionId | integer |
 
 ### `user` table
+
 
 | Field | Type    |
 | ----- | ------- |
