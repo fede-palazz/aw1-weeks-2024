@@ -17,6 +17,7 @@ Description: Retrieve all questions.
 Response: `200 OK` (success) or `500 Internal Server Error` (generic error).
 
 Response body:
+
 ```json
 [
     {
@@ -29,7 +30,7 @@ Response body:
 ]
 ```
 
-## Get a single question
+### Get a single question
 
 URL: `/api/questions/<id>`
 
@@ -43,14 +44,14 @@ Response body:
 
 ```json
 {
-    "id": 1,
-    "text": "Is Javascript better than Python?",
-    "email": "test@gmail.com",
-    "date": "2024-02-07"
+  "id": 1,
+  "text": "Is Javascript better than Python?",
+  "email": "test@gmail.com",
+  "date": "2024-02-07"
 }
 ```
 
-## Get all the answers of a single question
+### Get all the answers of a single question
 
 URL: `/api/questions/<id>/answers`
 
@@ -75,7 +76,7 @@ Response body:
 ]
 ```
 
-## Create a new answer for a given question
+### Create a new answer for a given question
 
 URL: `/api/questions/<id>/answers`
 
@@ -86,14 +87,57 @@ Description: Create a new answer to the question represented by `<id>`.
 Request body:
 
 ```json
- {
-     "text": "Yes",
-     "email": "test@gmail.com",
-     "score": -10,
-     "date": "2024-02-08"
+{
+  "text": "Yes",
+  "email": "test@gmail.com",
+  "score": -10,
+  "date": "2024-02-08"
 }
 ```
 
 Response: `201 Created` (success, with the created id), `404 Not Found` (wrong question id), `422 Unprocessable Entity` (request body not valid) or `503 Service Unavailable` (generic error).
 
 Response body: `None` (id will be sent back inside the response header).
+
+### Update an existing answer
+
+URL: `/api/answers/<id>`
+
+HTTP Method: `PUT`
+
+Description: Update an identified by `<id>`.
+
+Request body: A JSON object representing the answer.
+
+```json
+{
+  "text": "Last year, it had around 220 first-time students",
+  "email": "luca.mannella@polito.it",
+  "score": 0,
+  "date": "2024-03-27"
+}
+```
+
+Response: `200 OK` (success), `404 Not Found` (wrong id), or `503 Service Unavailable` (generic error). If the request body is not valid, `422 Unprocessable Entity` (validation error).
+
+Response body: `None`
+
+### Vote for an answer
+
+URL: `/api/answers/<id>/vote`
+
+HTTP Method: `POST`
+
+Description: Upvote (+1) or downvote (-1) an existing answer (identified by its `<id>`).
+
+Request body: A JSON object representing the action.
+
+```json
+{
+  "vote": "upvote"
+}
+```
+
+Response: `204 No content` (success) or `503 Service Unavailable` (generic error). If the request body is not valid, `422 Unprocessable Entity` (validation error).
+
+Response body: `None`
