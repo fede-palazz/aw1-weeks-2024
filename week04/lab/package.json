@@ -1,0 +1,21 @@
+{
+  "name": "aw1-lab03",
+  "version": "1.0.0",
+  "description": "Week04 lab03 - APIs with Express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.10",
+    "express": "^4.19.2",
+    "express-validator": "^7.0.1",
+    "json": "^11.0.0",
+    "morgan": "^1.10.0",
+    "sqlite3": "^5.1.7"
+  }
+}
