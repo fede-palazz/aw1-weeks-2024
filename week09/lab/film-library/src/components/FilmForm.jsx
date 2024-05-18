@@ -5,14 +5,13 @@ import { Button } from "react-bootstrap";
 import RatingStars from "./RatingStars";
 
 function FilmForm(props) {
-  const [title, setTitle] = useState(props.title || "");
-  const [watchDate, setWatchDate] = useState(props.watchDate || "");
-  const [isFavorite, setIsFavorite] = useState(props.isFavorite || false);
-  const [rating, setRating] = useState(props.rating || 0);
+  const [title, setTitle] = useState(props.title ?? "");
+  const [watchDate, setWatchDate] = useState(props.watchDate ?? "");
+  const [isFavorite, setIsFavorite] = useState(props.isFavorite ?? false);
+  const [rating, setRating] = useState(props.rating ?? 0);
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent form from being submitted
-    // TODO: validate fields
 
     props.mode === "edit"
       ? props.handleUpdate({
@@ -68,11 +67,12 @@ function FilmForm(props) {
       </Form.Group>
       {/* Is favorite */}
       <Form.Group className="mb-4">
-        <Form.Check type="checkbox" id={`filmIsFavorite`} name="filmIsFavorite">
+        <Form.Check type="checkbox" id="filmIsFavorite" name="filmIsFavorite">
           <Form.Check.Input
             type="checkbox"
-            value={isFavorite}
-            onChange={(event) => setIsFavorite(event.target.value)}
+            checked={isFavorite}
+            // value={"checked"}
+            onChange={(event) => setIsFavorite(event.target.checked)}
           />
           <Form.Check.Label>
             {`Add to my favorites `}

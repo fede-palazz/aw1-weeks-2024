@@ -49,7 +49,14 @@ function App() {
     setFilms((prevFilms) =>
       prevFilms.map((film) =>
         film.id === id
-          ? new Film(id, 2, title, isFavorite, watchDate, rating)
+          ? new Film(
+              id,
+              2,
+              title ?? film.title,
+              isFavorite ?? film.isFavorite,
+              watchDate ?? film.watchDate,
+              rating ?? film.rating
+            )
           : film
       )
     );
