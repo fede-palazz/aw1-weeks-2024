@@ -3,8 +3,12 @@ import { Trash, Pen, Heart, HeartFill } from "react-bootstrap-icons";
 import Table from "react-bootstrap/Table";
 import dayjs from "dayjs";
 import RatingStars from "./RatingStars";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function FilmTable({ films, handleDelete, handleEdit }) {
+  const navigate = useNavigate();
+
   return (
     <Table responsive>
       <thead>
@@ -23,7 +27,15 @@ function FilmTable({ films, handleDelete, handleEdit }) {
             <td>{film.title}</td>
             {/* FAVORITE */}
             <td className="px-4">
-              {film.isFavorite ? <HeartFill /> : <Heart />}
+              <Button
+                variant="link"
+                className="text-dark"
+                onClick={() =>
+                  handleEdit({ id: film.id, isFavorite: !film.isFavorite })
+                }
+              >
+                {film.isFavorite ? <HeartFill /> : <Heart />}
+              </Button>
             </td>
             {/* WATCHDATE */}
             <td>
@@ -33,22 +45,20 @@ function FilmTable({ films, handleDelete, handleEdit }) {
             </td>
             {/* RATING */}
             <td>
-              <RatingStars rating={film.rating} />
+              <RatingStars
+                rating={film.rating}
+                mode="hover"
+                handleChangeRating={(rating) =>
+                  handleEdit({ id: film.id, rating })
+                }
+              />
             </td>
             {/* ACTIONS */}
             <td className="align-middle">
               <Button
                 variant="link"
                 className="p-1 icon-link-hover"
-                onClick={() =>
-                  handleEdit(
-                    film.id,
-                    film.title,
-                    film.isFavorite,
-                    film.watchDate.format("YYYY-MM-DD"),
-                    film.rating
-                  )
-                }
+                onClick={() => navigate(`/edit/${film.id}`)}
               >
                 <Pen className="text-dark" />
               </Button>

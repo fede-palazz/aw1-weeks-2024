@@ -3,17 +3,22 @@ import { HeartFill } from "react-bootstrap-icons";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import RatingStars from "./RatingStars";
+import { useNavigate } from "react-router-dom";
 
 function FilmForm(props) {
   const [title, setTitle] = useState(props.title ?? "");
-  const [watchDate, setWatchDate] = useState(props.watchDate ?? "");
+  const [watchDate, setWatchDate] = useState(
+    props.watchDate?.format("YYYY-MM-DD") ?? ""
+  );
   const [isFavorite, setIsFavorite] = useState(props.isFavorite ?? false);
   const [rating, setRating] = useState(props.rating ?? 0);
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Prevent form from being submitted
 
-    props.mode === "edit"
+    props.id
       ? props.handleUpdate({
           id: props.id,
           title,
@@ -27,6 +32,7 @@ function FilmForm(props) {
           isFavorite,
           rating,
         });
+    navigate("/");
   };
 
   return (
@@ -83,12 +89,12 @@ function FilmForm(props) {
       {/* Actions */}
       <Form.Group>
         <Button variant="primary" type="submit">
-          {props.mode === "add" ? "Add" : "Update"}
+          {props.id ? "Update" : "Add"}
         </Button>
         <Button
           variant="outline-secondary"
           type="button"
-          onClick={props.handleCancel}
+          onClick={() => navigate(-1)}
           className="mx-2"
         >
           Cancel

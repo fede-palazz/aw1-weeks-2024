@@ -2,22 +2,19 @@ import { CollectionPlay, PersonCircle } from "react-bootstrap-icons";
 import { Button, Container, Form, InputGroup, Navbar } from "react-bootstrap";
 import { Search, XLg } from "react-bootstrap-icons";
 import { CollapsedSidebar } from "./Sidebar";
+import { Link } from "react-router-dom";
 
-function Navigation({
-  filterItems,
-  activeFilter,
-  searchTerm,
-  handleFilterChange,
-  handleSearchChange,
-}) {
+function Navigation({ filters, searchTerm, handleSearchChange }) {
   return (
     <Navbar expand="md" className="bg-primary px-2" data-bs-theme="dark">
       <Container fluid className="d-flex align-content-center">
         <Navbar.Toggle aria-controls="navbarCollapse" />
-        <Navbar.Brand href="#">
-          <CollectionPlay className="mx-2" />
-          <span className="text-light">Film Library</span>
-        </Navbar.Brand>
+        <Link to={"/"} className="text-decoration-none">
+          <Navbar.Brand>
+            <CollectionPlay className="mx-2" />
+            <span className="text-light">Film Library</span>
+          </Navbar.Brand>
+        </Link>
         <PersonCircle size="36" className="text-light d-md-none" />
 
         <Navbar.Collapse
@@ -53,11 +50,7 @@ function Navigation({
             </InputGroup>
 
             <div className="d-md-none">
-              <CollapsedSidebar
-                filterItems={filterItems}
-                activeFilter={activeFilter}
-                handleFilterChange={handleFilterChange}
-              />
+              <CollapsedSidebar filters={filters} />
             </div>
           </div>
         </Navbar.Collapse>
