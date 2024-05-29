@@ -11,13 +11,12 @@ const port = 3001;
 /* MIDDLEWARES */
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(cors({}));
-
-/* UTILITIES */
-function isValidFilterParameter(param) {
-  const filters = ["favorite", "best", "recent", "unseen"];
-  return filters.includes(param);
-}
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    optionsSuccessStatus: 200,
+  })
+);
 
 function validateRequest(req, res, next) {
   const errors = validationResult(req);
@@ -46,9 +45,7 @@ app.get(
   query("filter")
     .optional()
     .isIn(["favorites", "best", "recent", "unseen"])
-    .withMessage(
-      'Filter must be one of "favorites", "best", "recent" or "unseen"'
-    ),
+    .withMessage('Filter must be one of "favorites", "best", "recent" or "unseen"'),
   validateRequest,
   async (req, res) => {
     try {
