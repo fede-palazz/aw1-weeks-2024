@@ -16,15 +16,14 @@ export default function NotFound() {
             alt="page not found"
             className="my-3"
             style={{ display: "block" }}
-          />{" "}
+          />
         </Col>
       </Row>
       <Row>
         <Col>
-          {" "}
           <Link to="/" className="btn btn-primary mt-2 my-5">
-            Go Home!
-          </Link>{" "}
+            Go Home
+          </Link>
         </Col>
       </Row>
     </Container>

@@ -46,9 +46,11 @@ app.get(
     .optional()
     .isIn(["favorites", "best", "recent", "unseen"])
     .withMessage('Filter must be one of "favorites", "best", "recent" or "unseen"'),
+  query("searchTerm").optional().isString(),
   validateRequest,
   async (req, res) => {
     const filter = req.query?.filter || "";
+    const searchTerm = req.query?.searchTerm || "";
     let films;
     switch (filter) {
       case "favorites":
@@ -67,7 +69,10 @@ app.get(
         films = dao.getFilms();
     }
     films
-      .then((films) => res.status(200).json(films))
+      .then((films) => {
+        films = films.filter((film) => film.title.toLowerCase().includes(searchTerm));
+        return res.status(200).json(films);
+      })
       .catch((err) => {
         res.status(503).json({ error: err.message });
       });
