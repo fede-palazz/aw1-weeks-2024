@@ -12,6 +12,14 @@ const getFilms = async (filter = "", searchTerm = "") => {
   } else throw new Error("Internal server error");
 };
 
+const getFilm = async (id) => {
+  const response = await fetch(`${API_URL}/${id}`);
+  if (response.ok) {
+    const film = await response.json();
+    return new Film(film.id, film.userId, film.title, film.isFavorite, film.watchDate, film.rating);
+  } else throw new Error("Internal server error");
+};
+
 const addFilm = async (title, isFavorite, rating, watchDate, userId) => {
   const response = await fetch(API_URL, {
     method: "POST",
@@ -47,5 +55,5 @@ const deleteFilm = async (id) => {
   } else throw new Error("Internal server error");
 };
 
-const API = { getFilms, addFilm, updateFilm, deleteFilm };
+const API = { getFilms, getFilm, addFilm, updateFilm, deleteFilm };
 export default API;

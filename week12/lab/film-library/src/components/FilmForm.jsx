@@ -3,15 +3,14 @@ import { HeartFill } from "react-bootstrap-icons";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import RatingStars from "./RatingStars";
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 function FilmForm(props) {
-  const [title, setTitle] = useState(props.title ?? "");
-  const [watchDate, setWatchDate] = useState(
-    props.watchDate?.format("YYYY-MM-DD") ?? ""
-  );
-  const [isFavorite, setIsFavorite] = useState(props.isFavorite ?? false);
-  const [rating, setRating] = useState(props.rating ?? 0);
+  const { film } = useLoaderData();
+  const [title, setTitle] = useState(film?.title ?? "");
+  const [watchDate, setWatchDate] = useState(film?.watchDate?.format("YYYY-MM-DD") ?? "");
+  const [isFavorite, setIsFavorite] = useState(film?.isFavorite ?? false);
+  const [rating, setRating] = useState(film?.rating ?? 0);
 
   const navigate = useNavigate();
 

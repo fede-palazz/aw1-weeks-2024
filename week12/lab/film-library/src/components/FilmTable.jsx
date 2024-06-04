@@ -3,14 +3,13 @@ import { Trash, Pen, Heart, HeartFill } from "react-bootstrap-icons";
 import Table from "react-bootstrap/Table";
 import dayjs from "dayjs";
 import RatingStars from "./RatingStars";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function FilmTable({ films, handleDelete, handleEdit }) {
   const navigate = useNavigate();
 
   return (
-    <Table responsive>
+    <Table responsive className="align-middle">
       <thead>
         <tr>
           <th>Title</th>
@@ -30,27 +29,19 @@ function FilmTable({ films, handleDelete, handleEdit }) {
               <Button
                 variant="link"
                 className="text-dark"
-                onClick={() =>
-                  handleEdit({ id: film.id, isFavorite: !film.isFavorite })
-                }
+                onClick={() => handleEdit({ id: film.id, isFavorite: !film.isFavorite })}
               >
                 {film.isFavorite ? <HeartFill /> : <Heart />}
               </Button>
             </td>
             {/* WATCHDATE */}
-            <td>
-              {film.watchDate
-                ? dayjs(film.watchDate).format("MMMM D, YYYY")
-                : ""}
-            </td>
+            <td>{film.watchDate ? dayjs(film.watchDate).format("MMMM D, YYYY") : ""}</td>
             {/* RATING */}
             <td>
               <RatingStars
                 rating={film.rating}
                 mode="hover"
-                handleChangeRating={(rating) =>
-                  handleEdit({ id: film.id, rating })
-                }
+                handleChangeRating={(rating) => handleEdit({ id: film.id, rating })}
               />
             </td>
             {/* ACTIONS */}
@@ -58,7 +49,7 @@ function FilmTable({ films, handleDelete, handleEdit }) {
               <Button
                 variant="link"
                 className="p-1 icon-link-hover"
-                onClick={() => navigate(`/edit/${film.id}`)}
+                onClick={() => navigate(`/films/edit/${film.id}`)}
               >
                 <Pen className="text-dark" />
               </Button>
