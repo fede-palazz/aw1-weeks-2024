@@ -1,12 +1,11 @@
 import { Button } from "react-bootstrap";
 import FilmTable from "../components/FilmTable";
 import { Plus } from "react-bootstrap-icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../API.js";
 
 export default function FilmList({
-  films,
   filters,
   searchTerm,
   handleDeleteFilm,
@@ -14,16 +13,9 @@ export default function FilmList({
   handleFilterChange,
 }) {
   const navigate = useNavigate();
-  const { filter: filterParam } = useParams();
-  const activeFilter = filterParam ? filters.filter((filt) => filt.id === filterParam)[0] : null;
-
-  useEffect(() => {
-    API.getFilms(activeFilter?.id)
-      .then((films) => {
-        handleFilterChange(films);
-      })
-      .catch((err) => console.error(err));
-  }, [filterParam]);
+  // const { filter: filterParam } = useParams();
+  // const activeFilter = filterParam ? filters.filter((filt) => filt.id === filterParam)[0] : null;
+  const { films, activeFilter } = useLoaderData();
 
   return (
     <>

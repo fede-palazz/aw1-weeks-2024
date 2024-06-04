@@ -4,10 +4,8 @@ import { Row, Col, Container } from "react-bootstrap";
 import { Sidebar } from "./components/Sidebar";
 import dayjs from "dayjs";
 import { Film } from "./assets/filmModel";
-import { Routes, Route, Outlet } from "react-router-dom";
-import FilmList from "./pages/FilmList";
-import NotFound from "./pages/NotFound";
-import FilmData from "./pages/FilmData";
+import { Outlet, useLoaderData } from "react-router-dom";
+import API from "./API";
 
 const filters = [
   {
@@ -32,8 +30,7 @@ const filters = [
     id: "recent",
     label: "Seen Last Month",
     url: "/recent",
-    filterFunction: (film) =>
-      film.watchDate && dayjs().diff(film.watchDate, "month") <= 1,
+    filterFunction: (film) => film.watchDate && dayjs().diff(film.watchDate, "month") <= 1,
   },
   {
     id: "unseen",
@@ -43,10 +40,17 @@ const filters = [
   },
 ];
 
+export async function loader({ params, request }) {
+  const films = await API.getFilms();
+  const filter = params?.filter || "";
+  const url = new URL(request.url);
+  const searchTerm = url.searchParams.get("searchTerm") || "";
+  return { films, filter, searchTerm };
+}
+
 function App() {
-  const [films, setFilms] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("");
+  const { films, searchTerm } = useLoaderData();
+  // const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (searchTerm) => {
     setSearchTerm(searchTerm);
@@ -89,16 +93,19 @@ function App() {
         handleSearchChange={handleSearchChange}
       />
       <Container fluid className="h-100">
-        <Routes>
+        <Row className="h-100">
+          <Sidebar filters={filters} />
+          <Col className="p-4">
+            <Outlet />
+          </Col>
+        </Row>
+      </Container>
+
+      {/* <Routes>
           <Route
             path="/"
             element={
-              <Row className="h-100">
-                <Sidebar filters={filters} />
-                <Col className="p-4">
-                  <Outlet />
-                </Col>
-              </Row>
+              
             }
           >
             <Route
@@ -157,8 +164,7 @@ function App() {
               </Row>
             }
           />
-        </Routes>
-      </Container>
+        </Routes> */}
     </div>
   );
 }

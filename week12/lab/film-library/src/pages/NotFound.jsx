@@ -1,21 +1,22 @@
 import { Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useRouteError } from "react-router-dom";
 
 export default function NotFound() {
+  const error = useRouteError();
   return (
     <Container>
       <Row>
         <Col>
-          <h2>Error: page not found!</h2>
+          <h2>Error: {error.statusText || error.message}</h2>
         </Col>
       </Row>
       <Row>
         <Col>
           <img
-            src="/GitHub404.png"
+            src="https://i.stack.imgur.com/Esppm.png"
             alt="page not found"
-            className="my-3"
-            style={{ display: "block" }}
+            className="d-block my-3 w-75"
+            referrerPolicy="no-referrer"
           />
         </Col>
       </Row>
