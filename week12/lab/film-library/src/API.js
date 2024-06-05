@@ -20,7 +20,8 @@ const getFilm = async (id) => {
   } else throw new Error("Internal server error");
 };
 
-const addFilm = async (title, isFavorite, rating, watchDate, userId) => {
+const addFilm = async (title, isFavorite, rating, watchDate) => {
+  const userId = 2;
   const response = await fetch(API_URL, {
     method: "POST",
     headers: {

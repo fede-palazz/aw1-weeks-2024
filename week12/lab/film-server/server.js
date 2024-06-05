@@ -94,8 +94,10 @@ app.post(
   "/api/films",
   body("title").notEmpty(),
   body("isFavorite").isBoolean(),
-  body("rating").isInt({ min: 1, max: 5 }),
-  body("watchDate").optional({ nullable: true }).isDate({ format: "YYYY-MM-DD", strictMode: true }),
+  body("rating").isInt({ min: 0, max: 5 }),
+  body("watchDate")
+    .optional({ checkFalsy: true })
+    .isDate({ format: "YYYY-MM-DD", strictMode: true }),
   body("userId").isInt({ gte: 0 }),
   validateRequest,
   async (req, res) => {
@@ -103,9 +105,9 @@ app.post(
       .addFilm(
         req.body.title,
         req.body.isFavorite,
-        req.body.rating,
+        Number(req.body.rating),
         req.body.watchDate,
-        req.body.userId
+        Number(req.body.userId)
       )
       .then(() => res.status(200).end())
       .catch((err) => {
@@ -119,7 +121,7 @@ app.put(
   "/api/films/:id",
   param("id").isInt({ gte: 0 }),
   body("title").isString().notEmpty(),
-  body("isFavorite").isNumeric(),
+  body("isFavorite").isBoolean(),
   body("rating").isInt({ min: 1, max: 5 }),
   body("watchDate").isDate({ format: "YYYY-MM-DD", strictMode: true }),
   validateRequest,

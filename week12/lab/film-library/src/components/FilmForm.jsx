@@ -1,41 +1,38 @@
-import Form from "react-bootstrap/Form";
 import { HeartFill } from "react-bootstrap-icons";
 import { useState } from "react";
-import { Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import RatingStars from "./RatingStars";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Form as RouterForm, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import API from "../API";
 
-function FilmForm(props) {
+export async function action({ params, request }) {
+  const formData = await request.formData();
+  const formFields = Object.fromEntries(formData);
+  const id = params?.id ?? "";
+  const title = formFields.filmTitle;
+  const watchDate = formFields.filmWatchDate;
+  const isFavorite = formFields?.filmIsFavorite ? true : false;
+  const rating = formFields.filmRating;
+  if (id) {
+    // Update film data
+    await API.updateFilm(id, title, isFavorite, rating, watchDate);
+  } else {
+    // Add new film
+    await API.addFilm(title, isFavorite, rating, watchDate);
+  }
+  return redirect("/films");
+}
+
+function FilmForm() {
   const { film } = useLoaderData();
-  const [title, setTitle] = useState(film?.title ?? "");
-  const [watchDate, setWatchDate] = useState(film?.watchDate?.format("YYYY-MM-DD") ?? "");
-  const [isFavorite, setIsFavorite] = useState(film?.isFavorite ?? false);
-  const [rating, setRating] = useState(film?.rating ?? 0);
-
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent form from being submitted
-
-    props.id
-      ? props.handleUpdate({
-          id: props.id,
-          title,
-          isFavorite,
-          watchDate,
-          rating,
-        })
-      : props.handleAdd({
-          title,
-          watchDate,
-          isFavorite,
-          rating,
-        });
-    navigate("/");
+  const setRating = (rating) => {
+    document.getElementById("filmRating").value = rating;
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <RouterForm method="post" id="film-form">
       {/* Title */}
       <Form.Group className="mb-3" controlId="filmTitle">
         <Form.Label>Title*</Form.Label>
@@ -44,8 +41,7 @@ function FilmForm(props) {
           name="filmTitle"
           className="w-50"
           placeholder="Titanic"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
+          defaultValue={film?.title ?? ""}
           required
         />
       </Form.Group>
@@ -56,28 +52,33 @@ function FilmForm(props) {
           type="date"
           name="filmWatchDate"
           className="w-50"
-          value={watchDate}
-          onChange={(event) => setWatchDate(event.target.value)}
+          defaultValue={film?.watchDate ?? ""}
         />
       </Form.Group>
       {/* Rating */}
       <Form.Group className="mb-4">
         <Form.Label>Rating*</Form.Label>
         <RatingStars
-          rating={rating}
+          rating={film?.rating ?? 0}
           size={32}
           mode="hover"
           handleChangeRating={(rating) => setRating(rating)}
         />
+        <input
+          type="number"
+          id="filmRating"
+          name="filmRating"
+          defaultValue={film?.rating ?? 0}
+          hidden
+        />
       </Form.Group>
       {/* Is favorite */}
       <Form.Group className="mb-4">
-        <Form.Check type="checkbox" id="filmIsFavorite" name="filmIsFavorite">
+        <Form.Check type="checkbox" id="filmIsFavorite">
           <Form.Check.Input
             type="checkbox"
-            checked={isFavorite}
-            // value={"checked"}
-            onChange={(event) => setIsFavorite(event.target.checked)}
+            name="filmIsFavorite"
+            defaultChecked={film?.isFavorite ?? false}
           />
           <Form.Check.Label>
             {`Add to my favorites `}
@@ -88,7 +89,7 @@ function FilmForm(props) {
       {/* Actions */}
       <Form.Group>
         <Button variant="primary" type="submit">
-          {props.id ? "Update" : "Add"}
+          {film?.id ? "Update" : "Add"}
         </Button>
         <Button
           variant="outline-secondary"
@@ -99,7 +100,7 @@ function FilmForm(props) {
           Cancel
         </Button>
       </Form.Group>
-    </Form>
+    </RouterForm>
   );
 }
 

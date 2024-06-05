@@ -3,10 +3,11 @@ import { Trash, Pen, Heart, HeartFill } from "react-bootstrap-icons";
 import Table from "react-bootstrap/Table";
 import dayjs from "dayjs";
 import RatingStars from "./RatingStars";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useFetcher } from "react-router-dom";
 
-function FilmTable({ films, handleDelete, handleEdit }) {
+function FilmTable({ films }) {
   const navigate = useNavigate();
+  const fetcher = useFetcher();
 
   return (
     <Table responsive className="align-middle">
@@ -46,20 +47,18 @@ function FilmTable({ films, handleDelete, handleEdit }) {
             </td>
             {/* ACTIONS */}
             <td className="align-middle">
-              <Button
-                variant="link"
-                className="p-1 icon-link-hover"
-                onClick={() => navigate(`/films/edit/${film.id}`)}
-              >
-                <Pen className="text-dark" />
-              </Button>
-              <Button
-                variant="link"
-                className="p-1 icon-link-hover"
-                onClick={() => handleDelete(film.id)}
-              >
-                <Trash className="text-dark" />
-              </Button>
+              <fetcher.Form method="post" action={`/films/delete/${film.id}`}>
+                <Button
+                  variant="link"
+                  className="p-1 icon-link-hover"
+                  onClick={() => navigate(`/films/edit/${film.id}`)}
+                >
+                  <Pen className="text-dark" />
+                </Button>
+                <Button type="submit" variant="link" className="p-1 icon-link-hover">
+                  <Trash className="text-dark" />
+                </Button>
+              </fetcher.Form>
             </td>
           </tr>
         ))}

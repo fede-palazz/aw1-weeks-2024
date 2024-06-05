@@ -7,30 +7,30 @@ import { RouterProvider } from "react-router-dom";
 import NotFound from "./pages/NotFound.jsx";
 import FilmList from "./pages/FilmList.jsx";
 import FilmData from "./pages/FilmData.jsx";
-import { loader as appLoader } from "./App";
-import { loader as filmDataLoader } from "./pages/FilmData";
+import { loader as filmsDataLoader } from "./pages/FilmList";
+import { loader as editFilmLoader } from "./pages/FilmData";
+import { action as filmFormAction } from "./components/FilmForm";
+import { action as deleteFilmAction } from "./pages/FilmList";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate replace to="/films" />,
-    errorElement: <NotFound />,
   },
   {
     path: "/films",
     element: <App />,
     errorElement: <NotFound />,
-    loader: appLoader,
     children: [
       {
         index: true,
         element: <FilmList />,
-        loader: appLoader,
+        loader: filmsDataLoader,
       },
       {
         path: ":filter",
         element: <FilmList />,
-        loader: appLoader,
+        loader: filmsDataLoader,
       },
     ],
   },
@@ -38,13 +38,19 @@ const router = createBrowserRouter([
     path: "/films/add",
     element: <FilmData />,
     errorElement: <NotFound />,
-    loader: filmDataLoader,
+    loader: editFilmLoader,
+    action: filmFormAction,
   },
   {
     path: "/films/edit/:id",
     element: <FilmData />,
     errorElement: <NotFound />,
-    loader: filmDataLoader,
+    loader: editFilmLoader,
+    action: filmFormAction,
+  },
+  {
+    path: "/films/delete/:id",
+    action: deleteFilmAction,
   },
 ]);
 
