@@ -7,7 +7,7 @@ export default function NotFound() {
     <Container>
       <Row>
         <Col>
-          <h2>Error: {error.statusText || error.message}</h2>
+          <h2>Error: {error?.statusText || error?.message}</h2>
         </Col>
       </Row>
       <Row>

@@ -3,11 +3,11 @@ import { Trash, Pen, Heart, HeartFill } from "react-bootstrap-icons";
 import Table from "react-bootstrap/Table";
 import dayjs from "dayjs";
 import RatingStars from "./RatingStars";
-import { useNavigate, useFetcher } from "react-router-dom";
+import { useFetcher, useNavigate, useSubmit } from "react-router-dom";
 
 function FilmTable({ films }) {
   const navigate = useNavigate();
-  const fetcher = useFetcher();
+  const submit = useSubmit();
 
   return (
     <Table responsive className="align-middle">
@@ -28,9 +28,22 @@ function FilmTable({ films }) {
             {/* FAVORITE */}
             <td className="px-4">
               <Button
+                type="submit"
                 variant="link"
                 className="text-dark"
-                onClick={() => handleEdit({ id: film.id, isFavorite: !film.isFavorite })}
+                onClick={() => {
+                  submit(
+                    {
+                      action: "like",
+                      ...film,
+                      watchDate: film.watchDate?.format("YYYY-MM-DD") ?? "",
+                    },
+                    {
+                      method: "put",
+                      navigate: false,
+                    }
+                  );
+                }}
               >
                 {film.isFavorite ? <HeartFill /> : <Heart />}
               </Button>
@@ -42,23 +55,49 @@ function FilmTable({ films }) {
               <RatingStars
                 rating={film.rating}
                 mode="hover"
-                handleChangeRating={(rating) => handleEdit({ id: film.id, rating })}
+                handleChangeRating={(rating) => {
+                  submit(
+                    {
+                      action: "rate",
+                      ...film,
+                      rating: `${rating}`,
+                      watchDate: film.watchDate?.format("YYYY-MM-DD") ?? "",
+                    },
+                    {
+                      method: "put",
+                      navigate: false,
+                    }
+                  );
+                }}
               />
             </td>
             {/* ACTIONS */}
-            <td className="align-middle">
-              <fetcher.Form method="post" action={`/films/delete/${film.id}`}>
-                <Button
-                  variant="link"
-                  className="p-1 icon-link-hover"
-                  onClick={() => navigate(`/films/edit/${film.id}`)}
-                >
-                  <Pen className="text-dark" />
-                </Button>
-                <Button type="submit" variant="link" className="p-1 icon-link-hover">
-                  <Trash className="text-dark" />
-                </Button>
-              </fetcher.Form>
+            <td>
+              <Button
+                variant="link"
+                className="p-1 icon-link-hover"
+                onClick={() => navigate(`/films/edit/${film.id}`)}
+              >
+                <Pen className="text-dark" />
+              </Button>
+              <Button
+                type="submit"
+                name="action"
+                value="delete"
+                variant="link"
+                className="p-1 icon-link-hover"
+                onClick={() =>
+                  submit(
+                    { action: "delete", id: film.id },
+                    {
+                      method: "delete",
+                      navigate: false,
+                    }
+                  )
+                }
+              >
+                <Trash className="text-dark" />
+              </Button>
             </td>
           </tr>
         ))}

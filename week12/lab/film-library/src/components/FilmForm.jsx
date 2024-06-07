@@ -27,10 +27,6 @@ function FilmForm() {
   const { film } = useLoaderData();
   const navigate = useNavigate();
 
-  const setRating = (rating) => {
-    document.getElementById("filmRating").value = rating;
-  };
-
   return (
     <RouterForm method="post" id="film-form">
       {/* Title */}
@@ -62,7 +58,9 @@ function FilmForm() {
           rating={film?.rating ?? 0}
           size={32}
           mode="hover"
-          handleChangeRating={(rating) => setRating(rating)}
+          handleChangeRating={(rating) => {
+            document.getElementById("filmRating").value = rating;
+          }}
         />
         <input
           type="number"

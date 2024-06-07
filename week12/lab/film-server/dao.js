@@ -191,7 +191,7 @@ function addFilm(title, isFavorite, rating, watchDate, userId) {
     try {
       let sql =
         "INSERT INTO films (title, isFavorite, rating, watchDate, userId) VALUES (?,?,?,?,?)";
-      db.run(sql, [title, isFavorite ? 1 : 0, rating, watchDate, userId], (err) => {
+      db.run(sql, [title, !!isFavorite ? 1 : 0, rating, watchDate, userId], function (err) {
         if (err) {
           reject(err);
           return;
@@ -223,7 +223,7 @@ function deleteFilm(id) {
   return new Promise((resolve, reject) => {
     try {
       const sql = "DELETE FROM films WHERE id=?";
-      db.run(sql, [id], (err) => {
+      db.run(sql, [id], function (err) {
         if (err) {
           reject(err);
           return;
@@ -248,7 +248,7 @@ function updateFilm(id, title, isFavorite, rating, watchDate) {
   return new Promise((resolve, reject) => {
     try {
       const sql = "UPDATE films SET title=?, isFavorite=?, rating=?, watchDate=? WHERE id=?";
-      db.run(sql, [title, isFavorite, rating, watchDate, id], (err) => {
+      db.run(sql, [title, isFavorite ? 1 : 0, rating, watchDate, id], function (err) {
         if (err) {
           reject(err);
           return;

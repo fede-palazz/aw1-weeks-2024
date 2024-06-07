@@ -21,16 +21,9 @@ app.use(
 function validateRequest(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    let error = "The parameters are not formatted properly\n\n";
+    let error = "The parameters are not formatted properly:\n ";
     errors.array().forEach((e) => {
-      error +=
-        "- Parameter: **" +
-        e.param +
-        "** - Reason: *" +
-        e.msg +
-        "* - Location: *" +
-        e.location +
-        "*\n\n";
+      error += `- Parameter ${e.path} in ${e.location}: ${e.msg}\n`;
     });
     return res.status(422).json({ error: error });
   }
@@ -122,8 +115,10 @@ app.put(
   param("id").isInt({ gte: 0 }),
   body("title").isString().notEmpty(),
   body("isFavorite").isBoolean(),
-  body("rating").isInt({ min: 1, max: 5 }),
-  body("watchDate").isDate({ format: "YYYY-MM-DD", strictMode: true }),
+  body("rating").isInt({ min: 0, max: 5 }),
+  body("watchDate")
+    .optional({ checkFalsy: true })
+    .isDate({ format: "YYYY-MM-DD", strictMode: true }),
   validateRequest,
   async (req, res) => {
     dao

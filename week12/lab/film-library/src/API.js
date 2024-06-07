@@ -3,8 +3,9 @@ const SERVER_URL = "http://localhost:3001";
 const API_URL = `${SERVER_URL}/api/films`;
 
 const getFilms = async (filter = "", searchTerm = "") => {
-  let url = filter ? `${API_URL}?filter=${filter}` : `${API_URL}`;
-  url += searchTerm ? `&searchTerm=${searchTerm}` : "";
+  let url = API_URL + "?";
+  url += filter ? `filter=${filter}&` : "";
+  url += searchTerm ? `searchTerm=${searchTerm}` : "";
   const response = await fetch(url);
   if (response.ok) {
     const films = await response.json();
@@ -35,6 +36,10 @@ const addFilm = async (title, isFavorite, rating, watchDate) => {
 };
 
 const updateFilm = async (id, title, isFavorite, rating, watchDate) => {
+  id = Number(id);
+  rating = Number(rating);
+  watchDate = watchDate || null;
+  console.log(JSON.stringify({ title, isFavorite, rating, watchDate }));
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
     headers: {
