@@ -11,7 +11,7 @@ import { loader as appLoader } from "./App";
 import { loader as filmsDataLoader } from "./pages/FilmList";
 import { loader as editFilmLoader } from "./pages/FilmData";
 import { action as filmFormAction } from "./components/FilmForm";
-import { action as inlineEditAction } from "./pages/FilmList";
+import { likeAction, rateAction, deleteAction } from "./pages/InlineEditAction";
 
 const router = createBrowserRouter([
   {
@@ -32,13 +32,11 @@ const router = createBrowserRouter([
             index: true,
             element: <FilmList />,
             loader: filmsDataLoader,
-            action: inlineEditAction,
           },
           {
             path: ":filter",
             element: <FilmList />,
             loader: filmsDataLoader,
-            action: inlineEditAction,
           },
         ],
       },
@@ -57,6 +55,18 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     loader: editFilmLoader,
     action: filmFormAction,
+  },
+  {
+    path: "/films/like/:id",
+    action: likeAction,
+  },
+  {
+    path: "/films/rate/:id",
+    action: rateAction,
+  },
+  {
+    path: "/films/delete/:id",
+    action: deleteAction,
   },
 ]);
 
