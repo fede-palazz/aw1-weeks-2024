@@ -39,7 +39,6 @@ const updateFilm = async (id, title, isFavorite, rating, watchDate) => {
   id = Number(id);
   rating = Number(rating);
   watchDate = watchDate || null;
-  console.log(JSON.stringify({ title, isFavorite, rating, watchDate }));
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
     headers: {

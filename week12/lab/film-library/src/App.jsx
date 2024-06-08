@@ -6,6 +6,11 @@ import FILTERS from "./assets/filters.js";
 import BgSpinner from "./components/BgSpinner.jsx";
 import { useEffect, useState } from "react";
 
+export async function loader({ request }) {
+  const searchTerm = new URL(request.url).searchParams.get("searchTerm") || "";
+  return { searchTerm };
+}
+
 function App() {
   const navigation = useNavigation();
   const location = useLocation();

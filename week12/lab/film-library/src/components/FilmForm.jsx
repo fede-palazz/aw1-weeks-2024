@@ -1,9 +1,9 @@
 import { HeartFill } from "react-bootstrap-icons";
-import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import RatingStars from "./RatingStars";
-import { Form as RouterForm, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import { redirect, useActionData, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
 import API from "../API";
+import dayjs from "dayjs";
 
 export async function action({ params, request }) {
   const formData = await request.formData();
@@ -13,6 +13,22 @@ export async function action({ params, request }) {
   const watchDate = formFields.filmWatchDate;
   const isFavorite = formFields?.filmIsFavorite ? true : false;
   const rating = formFields.filmRating;
+
+  const errors = {};
+  // Title checks
+  if (!title || title.length === 0) errors.title = "Title is required";
+  else if (title.length < 5) errors.title = "Title is too short (min 5 characters)";
+  console.log(formFields);
+  // Watch date checks
+  if (watchDate && !dayjs(watchDate).isValid()) errors.watchDate = "Select a valid watch date";
+  else if (dayjs(watchDate).isAfter(new Date()))
+    errors.watchDate = "Watch date can't be a future date";
+  // Rating checks
+  if (!rating || rating < 1 || rating > 5) errors.rating = "Select a valid rating value";
+  // Validate form
+  if (Object.keys(errors).length) {
+    return errors;
+  }
   if (id) {
     // Update film data
     await API.updateFilm(id, title, isFavorite, rating, watchDate);
@@ -25,10 +41,12 @@ export async function action({ params, request }) {
 
 function FilmForm() {
   const { film } = useLoaderData();
+  const errors = useActionData();
   const navigate = useNavigate();
+  const submit = useSubmit();
 
   return (
-    <RouterForm method="post" id="film-form">
+    <Form method="post" id="film-form" noValidate>
       {/* Title */}
       <Form.Group className="mb-3" controlId="filmTitle">
         <Form.Label>Title*</Form.Label>
@@ -38,8 +56,9 @@ function FilmForm() {
           className="w-50"
           placeholder="Titanic"
           defaultValue={film?.title ?? ""}
-          required
+          isInvalid={errors?.title}
         />
+        <Form.Control.Feedback type="invalid">{errors?.title}</Form.Control.Feedback>
       </Form.Group>
       {/* Watch Date */}
       <Form.Group className="mb-3" controlId="filmWatchDate">
@@ -48,8 +67,10 @@ function FilmForm() {
           type="date"
           name="filmWatchDate"
           className="w-50"
-          defaultValue={film?.watchDate ?? ""}
+          defaultValue={film?.watchDate.format("YYYY-MM-DD") ?? ""}
+          isInvalid={errors?.watchDate}
         />
+        <Form.Control.Feedback type="invalid">{errors?.watchDate}</Form.Control.Feedback>
       </Form.Group>
       {/* Rating */}
       <Form.Group className="mb-4">
@@ -58,17 +79,20 @@ function FilmForm() {
           rating={film?.rating ?? 0}
           size={32}
           mode="hover"
+          isInvalid={!!errors?.rating}
           handleChangeRating={(rating) => {
             document.getElementById("filmRating").value = rating;
           }}
         />
-        <input
+        <Form.Control
           type="number"
           id="filmRating"
           name="filmRating"
           defaultValue={film?.rating ?? 0}
           hidden
+          isInvalid={errors?.rating}
         />
+        <Form.Control.Feedback type="invalid">{errors?.rating}</Form.Control.Feedback>
       </Form.Group>
       {/* Is favorite */}
       <Form.Group className="mb-4">
@@ -86,7 +110,12 @@ function FilmForm() {
       </Form.Group>
       {/* Actions */}
       <Form.Group>
-        <Button variant="primary" type="submit">
+        <Button
+          variant="primary"
+          onClick={(e) => {
+            submit(e.currentTarget.form);
+          }}
+        >
           {film?.id ? "Update" : "Add"}
         </Button>
         <Button
@@ -98,7 +127,7 @@ function FilmForm() {
           Cancel
         </Button>
       </Form.Group>
-    </RouterForm>
+    </Form>
   );
 }
 

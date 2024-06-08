@@ -21,7 +21,8 @@ function Navigation({ filters, showSearchbar = true }) {
     navigation.location && new URLSearchParams(navigation.location.search).has("searchTerm");
 
   useEffect(() => {
-    document.getElementById("searchTerm").value = searchTerm;
+    const searchBox = document.getElementById("searchTerm");
+    if (searchBox) searchBox.value = searchTerm;
   }, [searchTerm]);
 
   return (
@@ -51,9 +52,10 @@ function Navigation({ filters, showSearchbar = true }) {
                     type="search"
                     className="border-end-0 shadow-none border-light"
                     onChange={(e) => {
-                      const isFirstSearch = !searchTerm;
+                      // const isFirstSearch = !searchTerm;
                       submit(e.currentTarget.form, {
-                        replace: !isFirstSearch,
+                        // replace: !isFirstSearch,
+                        replace: true,
                       });
                     }}
                   />

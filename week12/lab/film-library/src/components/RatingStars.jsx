@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StarFill, Star } from "react-bootstrap-icons";
 
-function RatingStars({ rating, size = 16, mode = "view", handleChangeRating }) {
+function RatingStars({ rating, size = 16, mode = "view", handleChangeRating, isInvalid = false }) {
   const [rate, setRate] = useState(rating);
   const [hoverRate, setHoverRate] = useState(rating);
   const stars = [];
@@ -21,6 +21,7 @@ function RatingStars({ rating, size = 16, mode = "view", handleChangeRating }) {
           <StarFill
             key={i}
             size={size}
+            className={isInvalid ? "text-danger" : ""}
             onMouseOver={() => handleHover(i)}
             onClick={() => handleClick(i)}
             onMouseOut={() => handleLeave()}
@@ -31,6 +32,7 @@ function RatingStars({ rating, size = 16, mode = "view", handleChangeRating }) {
           <Star
             key={i}
             size={size}
+            className={isInvalid ? "text-danger" : ""}
             onMouseOver={() => handleHover(i)}
             onClick={() => handleClick(i)}
             onMouseOut={() => handleLeave()}

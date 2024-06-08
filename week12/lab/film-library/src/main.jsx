@@ -7,6 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import NotFound from "./pages/NotFound.jsx";
 import FilmList from "./pages/FilmList.jsx";
 import FilmData from "./pages/FilmData.jsx";
+import { loader as appLoader } from "./App";
 import { loader as filmsDataLoader } from "./pages/FilmList";
 import { loader as editFilmLoader } from "./pages/FilmData";
 import { action as filmFormAction } from "./components/FilmForm";
@@ -21,20 +22,25 @@ const router = createBrowserRouter([
   {
     path: "/films",
     element: <App />,
-    loader: filmsDataLoader,
+    loader: appLoader,
     errorElement: <NotFound />,
     children: [
       {
-        index: true,
-        element: <FilmList />,
-        loader: filmsDataLoader,
-        action: inlineEditAction,
-      },
-      {
-        path: ":filter",
-        element: <FilmList />,
-        loader: filmsDataLoader,
-        action: inlineEditAction,
+        errorElement: <NotFound />,
+        children: [
+          {
+            index: true,
+            element: <FilmList />,
+            loader: filmsDataLoader,
+            action: inlineEditAction,
+          },
+          {
+            path: ":filter",
+            element: <FilmList />,
+            loader: filmsDataLoader,
+            action: inlineEditAction,
+          },
+        ],
       },
     ],
   },

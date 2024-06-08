@@ -12,10 +12,6 @@ export async function loader({ params, request }) {
 
   if (!activeFilter && !request.url.split("/").pop().includes("films")) {
     throw new Error("Invalid filter");
-    // throw new Response("", {
-    //   status: 404,
-    //   statusText: "Not Found",
-    // });
   }
   const films = await API.getFilms(filter, searchTerm);
   if (!films) {
@@ -39,7 +35,6 @@ export async function action({ request }) {
   if (data.action === "like") {
     data.isFavorite = !data.isFavorite;
   }
-  console.log(data);
   await API.updateFilm(data.id, data.title, data.isFavorite, data.rating, data.watchDate);
   return null;
 }
